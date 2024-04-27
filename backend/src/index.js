@@ -7,10 +7,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const {startDatabase} = require('./database/mongo');
-const {insertAd, getAds} = require('./database/ads');
-const {deleteAd, updateAd} = require('./database/ads');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
+const { getProducts, insertProduct, deleteProduct, updateProduct } = require('./database/products');
 
 // defining the Express app
 const app = express();
@@ -26,11 +25,6 @@ app.use(cors());
 
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
-
-// endpoint to return all ads
-app.get('/', async (req, res) => {
-  res.send(await getAds());
-});
 
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
@@ -48,28 +42,38 @@ const checkJwt = jwt({
 
 app.use(checkJwt);
 
-app.post('/', async (req, res) => {
-  const newAd = req.body;
-  await insertAd(newAd);
-  res.send({ message: 'New ad inserted.' });
+// Endpoint to get all products
+app.get('/api/products', async (req, res) => {
+  res.send(await getProducts());
 });
 
-// endpoint to delete an ad
-app.delete('/:id', async (req, res) => {
-  await deleteAd(req.params.id);
-  res.send({ message: 'Ad removed.' });
+// Endpoint to add a new product
+app.post('/api/products', async (req, res) => {
+  const newProduct = req.body;
+  await insertProduct(newProduct);
+  res.send({ message: 'New product inserted.' });
 });
 
-// endpoint to update an ad
-app.put('/:id', async (req, res) => {
-  const updatedAd = req.body;
-  await updateAd(req.params.id, updatedAd);
-  res.send({ message: 'Ad updated.' });
+// Endpoint to delete a product
+app.delete('/api/products/:id', async (req, res) => {
+  await deleteProduct(req.params.id);
+  res.send({ message: 'Product removed.' });
+});
+
+// Endpoint to update a product
+app.put('/api/products/:id', async (req, res) => {
+  const updatedProduct = req.body;
+  await updateProduct(req.params.id, updatedProduct);
+  res.send({ message: 'Product updated.' });
 });
 
 // start the in-memory MongoDB instance
 startDatabase().then(async () => {
-  await insertAd({title: 'Hello, now from the in-memory database!'});
+
+  // Insert initial product data
+  await insertProduct({ name: 'Example Product 1', price: 9.99 });
+  await insertProduct({ name: 'Example Product 2', price: 14.99 });
+  // You can add more initial products here
 
   // start the server
   app.listen(3001, async () => {
