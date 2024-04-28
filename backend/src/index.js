@@ -7,8 +7,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const {startDatabase} = require('./database/mongo');
-const jwt = require('express-jwt');
-const jwksRsa = require('jwks-rsa');
+//const jwt = require('express-jwt');
+//const jwksRsa = require('jwks-rsa');
 const { getProducts, insertProduct, deleteProduct, updateProduct } = require('./database/products');
 
 // defining the Express app
@@ -26,26 +26,28 @@ app.use(cors());
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
 
-const checkJwt = jwt({
+/*const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://blog-samples.auth0.com/.well-known/jwks.json`
+    jwksUri: `https://dev-5zbrlv1ll45d1otx.eu.auth0.com/.well-known/jwks.json`
   }),
 
   // Validate the audience and the issuer.
-  audience: 'https://ads-api',
-  issuer: `https://blog-samples.auth0.com/`,
+  audience: 'https://c20703429-api',
+  issuer: `https://dev-5zbrlv1ll45d1otx.eu.auth0.com/`,
   algorithms: ['RS256']
-});
+});*/
 
-app.use(checkJwt);
 
 // Endpoint to get all products
 app.get('/api/products', async (req, res) => {
   res.send(await getProducts());
 });
+
+
+//app.use(checkJwt);
 
 // Endpoint to add a new product
 app.post('/api/products', async (req, res) => {
@@ -71,8 +73,8 @@ app.put('/api/products/:id', async (req, res) => {
 startDatabase().then(async () => {
 
   // Insert initial product data
-  await insertProduct({ name: 'Example Product 1', price: 9.99 });
-  await insertProduct({ name: 'Example Product 2', price: 14.99 });
+  await insertProduct({ name: 'Adidas Shoes', description: 'Size 11 Mens', price: 9.99 });
+  await insertProduct({ name: 'Levis Jeans', description: 'W36 Regular', price: 14.99 });
   // You can add more initial products here
 
   // start the server
