@@ -21,16 +21,19 @@ const Layout = ({ children }) => {
     <>
       <StyledNavbar expand="lg">
         <Container>
-          <Navbar.Brand as={Link} to="/">
+          <Navbar.Brand as={Link} className="text-white" to="/">
             My Product App
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <StyledNavLink as={Link} to="/">
+              <StyledNavLink as={Link} className="m-1" to="/">
                 Products
               </StyledNavLink>
-              <StyledNavLink as={Link} to="/add">
+              <StyledNavLink as={Link} className="m-1" to="/search">
+                Search
+              </StyledNavLink>
+              <StyledNavLink as={Link} className="m-1" to="/add">
                 Add Product
               </StyledNavLink>
             </Nav>

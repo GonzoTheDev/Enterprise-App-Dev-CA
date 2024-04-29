@@ -7,12 +7,18 @@ const collectionName = 'products';
 
 async function getProducts() {
   const database = await getDatabase();
-  return await database.collection(collectionName).find({}).toArray();
+  const products = await database.collection(collectionName).find({}).toArray();
+
+  return products;
 }
 
-async function insertProduct(product) {
+async function insertProduct(product, image) {
   const database = await getDatabase();
-  const { insertedId } = await database.collection(collectionName).insertOne(product);
+  let newProduct = { ...product };
+  if (image) {
+    newProduct.image = image;
+  }
+  const { insertedId } = await database.collection(collectionName).insertOne(newProduct);
   return insertedId;
 }
 
@@ -23,17 +29,20 @@ async function deleteProduct(id) {
   });
 }
 
-async function updateProduct(id, product) {
+async function updateProduct(id, product, image) {
   const database = await getDatabase();
   delete product._id;
-  await database.collection(collectionName).update(
+  let updatedProduct = { $set: { ...product } };
+  if (image) {
+    updatedProduct.$set.image = image;
+  }
+  const result = await database.collection(collectionName).findOneAndUpdate(
     { _id: new ObjectID(id) },
-    {
-      $set: {
-        ...product,
-      },
-    }
+    updatedProduct,
+    { returnDocument: 'after' }
   );
+
+  return result.value;
 }
 
 module.exports = {

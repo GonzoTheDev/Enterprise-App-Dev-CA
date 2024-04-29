@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/axios';
-import { Link } from 'react-router-dom';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button, Row, Col, Form } from 'react-bootstrap';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Layout from './Layout';
 
@@ -10,8 +10,10 @@ const StyledCard = styled(Card)`
   margin-bottom: 1rem;
 `;
 
-const ProductList = () => {
+const SearchProducts = () => {
   const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     fetchProducts();
@@ -25,9 +27,21 @@ const ProductList = () => {
         imageUrl: product.image || 'https://via.placeholder.com/150',
       }));
       setProducts(productsWithImages);
+      setFilteredProducts(productsWithImages);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filtered = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.description.toLowerCase().includes(term)
+    );
+    setFilteredProducts(filtered);
   };
 
   const deleteProduct = async (id) => {
@@ -41,9 +55,17 @@ const ProductList = () => {
 
   return (
     <Layout>
-      <h2>Product List</h2>
+      <h2>Search Products</h2>
+      <Form.Control
+        type="text"
+        placeholder="Search products..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="mb-3"
+        style={{ maxWidth: '500px', margin: '0 auto' }}
+      />
       <Row>
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Col md={4} key={product._id}>
             <StyledCard>
               <Card.Img
@@ -81,4 +103,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default SearchProducts;
