@@ -36,6 +36,9 @@ const Layout = ({ children }) => {
               <StyledNavLink as={Link} className="m-1" to="/add">
                 Add Product
               </StyledNavLink>
+              <StyledNavLink as={Link} className="m-1" to="/about">
+                About
+              </StyledNavLink>
             </Nav>
           </Navbar.Collapse>
         </Container>
