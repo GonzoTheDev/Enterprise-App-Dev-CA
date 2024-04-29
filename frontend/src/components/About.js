@@ -6,7 +6,7 @@ const AboutPage = () => {
     <Layout>
       <h2>About</h2>
       <p>
-        This application is a product management system developed using a modern technology stack. The frontend is built with React.js, a popular JavaScript library for building user interfaces. The backend is implemented using Node.js, a runtime environment that allows executing JavaScript code on the server-side.
+        This application is a product management system developed using a modern technology stack. The frontend is built with React.js, a popular JavaScript library for building user interfaces. The backend is a REST API microservice implemented using Node.js, a runtime environment that allows executing JavaScript code on the server-side.
       </p>
       <h3>Technologies Involved</h3>
       <ul>
